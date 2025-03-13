@@ -34,7 +34,7 @@ git clone https://github.com/torpunnawit/stayease
 
 # เข้าไปที่โฟลเดอร์โปรเจกต์
 
-cd booking-system
+cd stayease
 
 # ติดตั้ง dependencies
 
