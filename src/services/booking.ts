@@ -11,15 +11,19 @@ export const booking = async (
   room_id: number
 ) => {
   try {
-    const response = await api.post("/api/booking", {
-      firstname,
-      lastname,
-      email,
-      phone,
-      checkin,
-      checkout,
-      room_id,
-    });
+    const response = await api.post(
+      "/api/booking",
+      {
+        firstname,
+        lastname,
+        email,
+        phone,
+        checkin,
+        checkout,
+        room_id,
+      },
+      { withCredentials: true }
+    );
     return response.data;
   } catch (error) {
     throw error;

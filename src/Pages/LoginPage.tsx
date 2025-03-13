@@ -10,7 +10,6 @@ const Login = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
     }, []);
@@ -19,14 +18,20 @@ const Login = () => {
         e.preventDefault();
         try {
             const data = await login(email, password);
-            if (!data || !data.token || !data.userId) {
+            console.log("Login data:", data);
+            console.log(!data.token)
+            if (!data || !data.token || !data.session.userId) {
                 throw new Error("Invalid response from server");
             }
 
-            const { token, userId } = data;
+            const { token } = data;
+            const userId = data.session.userId;
+            console.log("userId", userId);
+
             message.success("🎉 Login Complete!");
             localStorage.setItem("token", token);
             localStorage.setItem("userId", userId);
+
             navigate("/booking");
         } catch (error) {
             message.error("Login failed. Please check your credentials.");

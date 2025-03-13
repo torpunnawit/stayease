@@ -5,6 +5,7 @@ import timezone from "dayjs/plugin/timezone";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
 interface userBookingData {
   email: string;
   firstname: string;
@@ -35,7 +36,8 @@ export default async function fetchUserBookingData(): Promise<
 
   try {
     const response = await api.get<{ data: userBookingData[] }>(
-      `/api/userBookingData/${userId}`
+      `/api/userBookingData/${userId}`,
+      { withCredentials: true }
     );
     console.log("userData API response:", response.data);
 

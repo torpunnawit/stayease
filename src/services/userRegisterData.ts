@@ -19,7 +19,8 @@ export default async function fetchUserRegisterData(): Promise<
 
   try {
     const response = await api.get<{ data: userRegisterData[] }>(
-      `/api/userData/${userId}`
+      `/api/userData/${userId}`,
+      { withCredentials: true }
     );
     console.log("userData API response:", response.data);
 
