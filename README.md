@@ -1,4 +1,4 @@
-Project Name : Stayease
+Project Name : Stayease (Frontend)
 
 #คำอธิบาย
 
