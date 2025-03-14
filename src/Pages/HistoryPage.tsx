@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { message } from "antd";
 import fetchBookingHistory from "../services/userBookingData";
 import { useNavigate } from "react-router-dom";
-import { ClipLoader } from "react-spinners"; // Import the loading spinner
+import { ClipLoader } from "react-spinners";
 
 interface userBookingData {
     email: string;
@@ -17,7 +17,7 @@ interface userBookingData {
 
 const BookingHistory = () => {
     const [bookingHistory, setBookingHistory] = useState<userBookingData[]>([]);
-    const [loading, setLoading] = useState(true); // Add loading state
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -39,7 +39,7 @@ const BookingHistory = () => {
                 console.error("Failed to fetch booking history", error);
                 message.error("Failed to fetch booking history");
             } finally {
-                setLoading(false); // Set loading to false when fetch completes
+                setLoading(false);
             }
         };
 
@@ -51,7 +51,7 @@ const BookingHistory = () => {
             <div className="bg-white shadow-xl rounded-xl p-6 max-w-4xl w-full">
                 {loading ? (
                     <div className="flex justify-center items-center">
-                        <ClipLoader size={50} color="#4A90E2" /> {/* Show spinner when loading */}
+                        <ClipLoader size={50} color="#4A90E2" />
                     </div>
                 ) : (
                     <>
