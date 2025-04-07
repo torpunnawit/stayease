@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import fetchBookingHistory from "../services/userBookingData";
 import { useNavigate } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
-
+import { checkSession } from "../utils/authUtils";
 interface userBookingData {
     email: string;
     firstname: string;
@@ -22,15 +21,7 @@ const BookingHistory = () => {
 
     useEffect(() => {
         const fetchHistory = async () => {
-            const token = localStorage.getItem("token");
-            console.log("token:", token);
-
-            if (!token) {
-                message.error("No token found. Please login again.");
-                localStorage.removeItem("token");
-                navigate("/");
-                return;
-            }
+            if (!checkSession(navigate)) return;
             try {
                 const data = await fetchBookingHistory();
                 console.log("Booking history data:", data);
@@ -46,12 +37,13 @@ const BookingHistory = () => {
         fetchHistory();
     }, [navigate]);
 
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500 p-6">
             <div className="bg-white shadow-xl rounded-xl p-6 max-w-4xl w-full">
                 {loading ? (
                     <div className="flex justify-center items-center">
-                        <ClipLoader size={50} color="#4A90E2" />
+                        <Spin size="large" />
                     </div>
                 ) : (
                     <>

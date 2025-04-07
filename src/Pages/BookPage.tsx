@@ -3,13 +3,13 @@ import { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import { booking } from "../services/booking";
 import { useNavigate } from "react-router-dom";
 import fetchUserRegisterData from "../services/userRegisterData";
 import fetchBookedDates from "../services/bookedDates";
-import { ArrowLeft } from "lucide-react";
-import { ClipLoader } from "react-spinners";
+import { checkSession } from "../utils/authUtils";
+
 
 interface BookedDatesResponse {
     room_id: number;
@@ -40,15 +40,6 @@ const BookingForm = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        console.log("token:", token);
-
-        if (!token) {
-            message.error("No token found. Please login again.");
-            localStorage.removeItem("token");
-            navigate("/");
-            return;
-        }
         const fetchDates = async () => {
             try {
                 const data = await fetchBookedDates();
@@ -84,9 +75,23 @@ const BookingForm = () => {
         }
     }, []);
 
+    useEffect(() => { }, [checkInDate, checkOutDate]);
+
     useEffect(() => {
-        console.log(checkInDate);
-    }, [checkInDate, checkOutDate]);
+        const fetchData = async () => {
+            if (!checkSession(navigate)) return;
+
+            try {
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                message.error("Failed to load data.");
+                navigate("/");
+            }
+        };
+        fetchData();
+    }, [navigate]);
 
     const handleDateSelect = (selectedDate: Dayjs | null) => {
         if (!selectedDate) return;
@@ -182,7 +187,7 @@ const BookingForm = () => {
             <div className="bg-white shadow-xl rounded-xl p-6 max-w-4xl w-full">
                 {loading ? (
                     <div className="flex justify-center items-center">
-                        <ClipLoader size={50} color="#4A90E2" />
+                        <Spin size="large" />
                     </div>
                 ) : (
                     <>
@@ -218,7 +223,20 @@ const BookingForm = () => {
                                         onClick={() => navigate("/")}
                                         className="absolute top-4 left-4 p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition"
                                     >
-                                        <ArrowLeft className="text-gray-600" size={20} />
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={1.5}
+                                            stroke="currentColor"
+                                            className="w-6 h-6 text-gray-600"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M15.75 19.5L8.25 12l7.5-7.5"
+                                            />
+                                        </svg>
                                     </button>
                                     <h2 className="text-lg font-semibold text-gray-700 mb-4 text-center">
                                         Choose Check-in & Check-out date
